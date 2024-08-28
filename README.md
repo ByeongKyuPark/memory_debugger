@@ -1,18 +1,42 @@
-### Integration  
-    Should include CustomDebugger.h & .cpp, as Common.h, and mallocator.h in the project.
-
-### Output  
-    In the event of a memory leak, the "DebugLog.csv" file in the solution directory records the message, file location, line in the file, bytes, memory address, and instruction pointer.
-    
-    ex. 
-        Message	       File	       Line       Bytes      Address     Additional Info
-        ----------------------------------------------------------------------
-        Memory Leak	 C:\memory_debugger\TestScenarios.cpp 	50	4	 0x0000028F71110FFC	 Instruction Pointer=  0x00007FF709557187
-        Memory Leak	 C:\memory_debugger\TestScenarios.cpp 	61	40	 0x0000028F711B0FD8	 Instruction Pointer=  0x00007FF709557264
-        Memory Leak	 C:\memory_debugger\src\TestScenarios.cpp 	41	8	 0x0000028F711C0FF8	 Instruction Pointer=  0x00007FF7095577D0
-
 ### Project Overview
 The memory debugger is a tool designed to integrate into software projects to detect and log issues related to dynamic memory management. Such issues include memory leaks, buffer overflows, and incorrect memory deallocation practices. The goal is to help developers identify potential memory issues that could lead to software instability or crashes.
+
+### Integration
+To effectively integrate the memory debugger into an existing project, developers should include specific files from the memory debugger's source code. Here's how to proceed:
+
+1. **Include Header and Implementation Files**:
+    - **`CustomDebugger.h` and `CustomDebugger.cpp`**: These files contain the core functionality of the memory debugger. They should be included in the project to manage memory operations and log any discrepancies.
+    - **`Common.h`**: This header might contain common definitions and utility functions used by the debugger. It ensures that all parts of the project have access to necessary macros or global settings.
+    - **`mallocator.h`**: This header defines a custom memory allocator that the debugger uses to track dynamic memory allocation without interfering with the standard library's memory management.
+
+2. **Project Configuration**:
+    - Ensure that these files are correctly referenced in your project's build configuration. This might involve setting the correct include directories in your build system or IDE.
+    - If using CMake, make sure to add these files to the CMakeLists.txt so they are compiled and linked correctly.
+
+3. **Initialization**:
+    - Initialize the memory debugger in the main entry point of your application to start monitoring memory operations from the beginning of the program execution.
+
+### Output
+When a memory-related error is detected, such as a memory leak, the debugger logs detailed information to facilitate debugging:
+
+- **File**: `DebugLog.csv`
+- **Location**: Typically found in the solution directory alongside the executable.
+- **Logged Information**:
+  - **Message**: Describes the type of error detected (e.g., "Memory Leak").
+  - **File Location**: The source file where the erroneous memory operation occurred.
+  - **Line**: The specific line number in the source file of the erroneous operation.
+  - **Bytes**: The amount of memory involved in the operation, which could be the size of a leak or an overflow.
+  - **Memory Address**: The actual memory address at which the operation was attempted.
+  - **Additional Info**: This could include the instruction pointer or other context-specific information that helps trace the error back to its source.
+
+**Example Entry in `DebugLog.csv`**:
+```
+        Message        File        Line       Bytes      Address     Additional Info
+        ----------------------------------------------------------------------
+        Memory Leak  C:\memory_debugger\TestScenarios.cpp   50  4    0x0000028F71110FFC  Instruction Pointer=  0x00007FF709557187
+        Memory Leak  C:\memory_debugger\TestScenarios.cpp   61  40   0x0000028F711B0FD8  Instruction Pointer=  0x00007FF709557264
+        Memory Leak  C:\memory_debugger\src\TestScenarios.cpp   41  8    0x0000028F711C0FF8  Instruction Pointer=  0x00007FF7095577D0
+```
 
 ### Key Features and Functionalities
 - **Memory Leak Detection**: Identifies instances where allocated memory is not freed before program termination.
